@@ -1,0 +1,5 @@
+<ul>
+<?php foreach ($messages as $message): ?>
+    <li><?php echo $message->getAuthorName(); ?> - <?php echo $message->getMessage(); ?></li>
+<?php endforeach; ?>
+</ul>
