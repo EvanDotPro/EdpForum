@@ -2,11 +2,11 @@
 
 namespace EdpForum\Controller;
 
-use Zend\Mvc\Controller\ActionController,
-    Zend\View\Model\ViewModel,
-    Zend\Stdlib\ResponseDescription as Response;
+use Zend\Mvc\Controller\AbstractActionController;
+use Zend\View\Model\ViewModel;
+use Zend\Stdlib\ResponseDescription as Response;
 
-class DiscussController extends ActionController
+class DiscussController extends AbstractActionController
 {
     protected $discussService;
 
@@ -30,7 +30,7 @@ class DiscussController extends ActionController
                 'tagslug' => $tag->getSlug(),
                 'tagid'   => $tag->getTagId()
             ));
-        } 
+        }
 
         $threads = $this->getDiscussService()->getLatestThreads(25, 0, $tag->getTagId());
 
@@ -59,7 +59,7 @@ class DiscussController extends ActionController
                 'threadslug' => $thread->getSlug(),
                 'threadid'   => $thread->getThreadId(),
             ));
-        } 
+        }
 
         $messages = $this->getDiscussService()->getMessagesByThread($thread);
 
@@ -73,7 +73,7 @@ class DiscussController extends ActionController
     public function verifyTag()
     {
         $tag = $this->getTag();
-        
+
         if (!$tag) {
             return -1;
         } else if ($tag->getSlug() !== $this->getEvent()->getRouteMatch()->getParam('tagslug')) {
@@ -118,6 +118,10 @@ class DiscussController extends ActionController
 
     public function getDiscussService()
     {
+        if (null === $this->discussService) {
+            $this->discussService = $this->getServiceLocator()->get('edpdiscuss_discuss_service');
+        }
+
         return $this->discussService;
     }
 
