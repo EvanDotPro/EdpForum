@@ -1,5 +1,16 @@
-<ul>
 <?php foreach ($messages as $message): ?>
-    <li><?php echo $message->getAuthorName(); ?> - <?php echo $message->getMessage(); ?></li>
+<hr>
+<div class="discuss-message">
+    <div class="discuss-body">
+        <small class="text-muted pull-right"><?php echo $this->dateFormat(
+            $message->getPostTime(),
+            IntlDateFormatter::MEDIUM, // date
+            IntlDateFormatter::MEDIUM
+        ); ?></small>
+        <div class="discuss-heading">
+            <h4><?php echo $message->getSubject(); ?></h4>
+        </div>
+        <?php echo $message->getMessage(); ?>
+    </div>
+</div>
 <?php endforeach; ?>
-</ul>
