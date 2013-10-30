@@ -70,6 +70,34 @@ class DiscussController extends AbstractActionController
         ));
     }
 
+    public function newmessageAction()
+    {
+        // Create new form instance.
+        $form = $this->getServiceLocator()->get('edpdiscuss_form');
+        
+        $tag = $this->getTag();
+        $thread = $this->getThread();
+        
+        // Check if the request is a POST.
+        $request = $this->getRequest();
+        if ($request->isPost())
+        {
+          // if post, check if valid
+          
+            // if valid, persist
+            
+            // if not valid, display errors
+        } 
+        
+        // If not a POST request, then just render the form.
+        return new ViewModel(array(
+            'form'   => $form,
+            'tag'    => $tag,
+            'thread' => $thread
+        ));
+          
+    }
+    
     public function verifyTag()
     {
         $tag = $this->getTag();

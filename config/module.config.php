@@ -26,7 +26,7 @@ return array(
                     'thread' => array(
                         'type'    => 'Zend\Mvc\Router\Http\Segment',
                         'options' => array(
-                            'route'    => '/:threadslug{-}-:threadid',
+                            'route'    => '/:threadslug{-}-:threadid/:action',
                             'constraints' => array(
                                 'threadslug' => '[a-zA-Z][a-zA-Z0-9_-]*',
                                 'threadid'   => '[0-9]+',
