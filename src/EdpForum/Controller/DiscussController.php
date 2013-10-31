@@ -83,10 +83,18 @@ class DiscussController extends AbstractActionController
         if ($request->isPost())
         {
           // if post, check if valid
-          
-            // if valid, persist
-            
-            // if not valid, display errors
+          $data = (array) $request->getPost();
+          if (false != $this->getDiscussService()->createMessage($data, $thread))
+          {    
+              // Redirect to list of messages
+		      return $this->redirect()->toRoute('edpforum/thread', array(
+		          'tagslug'    => $tag->getSlug(),
+                  'tagid'      => $tag->getTagId(),
+                  'threadslug' => $thread->getSlug(),
+                  'threadid'   => $thread->getThreadId(),
+		          'action'     => 'messages'
+		      ));
+          }
         } 
         
         // If not a POST request, then just render the form.

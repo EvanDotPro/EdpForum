@@ -1,12 +1,14 @@
-<h4>New message</h4>
+<h1><?php echo $this->translate('New Message'); ?></h1>
+
 <?php
     $form = $this->form;
+    $form->prepare();
 	$form->setAttribute('action', $this->url('edpforum/thread', array(
 	    'tagslug'    => $this->tag->getSlug(),
 	    'tagid'      => $this->tag->getTagId(),
 	    'threadslug' => $this->thread->getSlug(),
 	    'threadid'   => $this->thread->getThreadId(),
-	    'action'     => 'addmessage')));
-	$form->get('submit')->setAttribute('Value', 'Add');
-	echo $this->RenderForm($form);
+	    'action'     => 'newmessage')));
+	$form->setAttribute('method', 'post');
+	echo $this->renderForm($form);	
 ?>
