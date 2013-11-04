@@ -1,11 +1,42 @@
-<div class="discuss-list">
-    <ul>
-        <?php foreach($tags as $tag): ?>
-        <li><a href="<?php echo $this->url('edpforum', array(
-            'tagslug' => $tag->getSlug(),
-            'tagid' => $tag->getTagId()
-        ));?>"><?php echo $tag->getName(); ?></a>
-        </li>
-        <?php endforeach; ?>
-    </ul>
-</div>
+<h3>Forums</h3>
+
+<ol class="breadcrumb">
+  <li class="active">Forum List</li>
+</ol>
+
+<table class="table table-hover">
+
+    <thead>
+    <tr>
+        <th>Forums</th>
+        <th>Topics</th>
+        <th>Posts</th>
+        <th>Last Post</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    <?php foreach($tags as $tag): ?>
+    <tr>
+        <td>
+            <a href="<?php echo $this->url('edpforum', array(
+                'tagslug' => $tag->getSlug(),
+                'tagid' => $tag->getTagId()
+            ));?>"><?php echo $tag->getName(); ?></a>
+            <br><?php echo $tag->getDescription(); ?>
+        </td>
+        <td>
+            <span>:todo placeholder</span>
+        </td>
+        <td>
+            <span>:todo placeholder</span>
+        </td>
+        <td>
+            <span>:todo placeholder</span>
+        </td>
+    </tr>
+    <?php endforeach; ?>
+    </tbody>
+    
+</table>
+  

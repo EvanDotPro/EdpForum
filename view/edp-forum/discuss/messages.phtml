@@ -1,21 +1,26 @@
+<h3><?php echo $thread->getSubject(); ?></h3>
+
+<ol class="breadcrumb">
+  <li><a href="<?php echo $this->url('forum'); ?>">Forum List</a></li>
+  <li><a href="<?php echo $this->url('edpforum', array(
+      'tagslug' => $tag->getSlug(),
+      'tagid' => $tag->getTagId()
+  )); ?>">Thread List</a></li>
+  <li class="active"><?php echo $thread->getSubject(); ?></li>
+</ol>
+
 <?php foreach ($messages as $message): ?>
-<a href="<?php echo $this->url('edpforum', array(
-    'tagslug' => $tag->getSlug(),
-    'tagid' => $tag->getTagId()
-)); ?>">Threads</a>
-<br>
-<hr>
-<div class="discuss-message">
-    <div class="discuss-body">
+<div class="panel panel-default">
+    <div class="panel-heading clearfix">
+        <h4 class="pull-left"><?php echo $message->getSubject(); ?></h4>
         <small class="text-muted pull-right"><?php echo $this->dateFormat(
             $message->getPostTime(),
             IntlDateFormatter::MEDIUM, // date
-            IntlDateFormatter::MEDIUM
+            IntlDateFormatter::MEDIUM  // time
         ); ?></small>
-        <div class="discuss-heading">
-            <h4><?php echo $message->getSubject(); ?></h4>
-        </div>
-        <?php echo $message->getMessage(); ?>
+    </div>
+    <div class="panel-body">
+        <p><?php echo $message->getMessage(); ?></p>
     </div>
 </div>
 <?php endforeach; ?>
