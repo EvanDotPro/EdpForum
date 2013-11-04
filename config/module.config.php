@@ -8,6 +8,16 @@ return array(
     ),
     'router' => array(
         'routes' => array(
+            'forum' => array(
+                'type' => 'Zend\Mvc\Router\Http\Segment',
+                'options' => array(
+                    'route' => '/forum',
+                    'defaults' => array(
+                        'controller' => 'EdpForum\Controller\DiscussController',
+                        'action' => 'forums',
+                    ),
+                ),
+            ),
             'edpforum' => array(
                 'type'    => 'Zend\Mvc\Router\Http\Segment',
                 'options' => array(

@@ -1,0 +1,11 @@
+<div class="discuss-list">
+    <ul>
+        <?php foreach($tags as $tag): ?>
+        <li><a href="<?php echo $this->url('edpforum', array(
+            'tagslug' => $tag->getSlug(),
+            'tagid' => $tag->getTagId()
+        ));?>"><?php echo $tag->getName(); ?></a>
+        </li>
+        <?php endforeach; ?>
+    </ul>
+</div>

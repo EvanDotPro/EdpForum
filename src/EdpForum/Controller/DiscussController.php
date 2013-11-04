@@ -14,6 +14,16 @@ class DiscussController extends AbstractActionController
 
     protected $thread;
 
+    public function forumsAction()
+    {
+        $tags = $this->getDiscussService()->getTags();
+
+        return new ViewModel(array(
+            'tags' => $tags
+        ));
+        
+    }
+    
     public function threadsAction()
     {
         $verifyTag = $this->verifyTag();
