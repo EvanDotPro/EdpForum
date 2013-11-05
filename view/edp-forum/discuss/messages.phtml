@@ -5,7 +5,7 @@
   <li><a href="<?php echo $this->url('edpforum', array(
       'tagslug' => $tag->getSlug(),
       'tagid' => $tag->getTagId()
-  )); ?>">Thread List</a></li>
+  )); ?>"><?php echo $tag->getName(); ?></a></li>
   <li class="active"><?php echo $thread->getSubject(); ?></li>
 </ol>
 
@@ -24,3 +24,24 @@
     </div>
 </div>
 <?php endforeach; ?>
+
+<div class="panel panel-primary">
+    <div class="panel-heading clearfix">
+        <h4 class="pull-left">New Message</h4>
+    </div>
+    <div class="panel-body">
+        <?php
+            $form = $this->form;
+            $form->prepare();
+	        $form->setAttribute('action', $this->url('edpforum/thread', array(
+	            'tagslug'    => $this->tag->getSlug(),
+	            'tagid'      => $this->tag->getTagId(),
+	            'threadslug' => $this->thread->getSlug(),
+	            'threadid'   => $this->thread->getThreadId(),
+	            'action'     => 'newmessage')));
+	        $form->setAttribute('method', 'post');
+	        echo $this->renderForm($form);	
+        ?>
+    </div>
+</div>
+    

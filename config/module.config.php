@@ -48,6 +48,17 @@ return array(
                         ),
                         'may_terminate' => true,
                     ),
+                    'newthread' => array(
+                        'type'    => 'Zend\Mvc\Router\Http\Segment',
+                        'options' => array(
+                            'route'    => '/newthread',
+                            'defaults' => array(
+                                'controller' => 'EdpForum\Controller\DiscussController',
+                                'action'     => 'newthread',
+                            ),
+                        ),
+                        'may_terminate' => true,
+                    ),
                 ),
             ),
         ),

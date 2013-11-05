@@ -73,10 +73,14 @@ class DiscussController extends AbstractActionController
 
         $messages = $this->getDiscussService()->getMessagesByThread($thread);
 
+        // Create new form instance.
+        $form = $this->getServiceLocator()->get('edpdiscuss_form');
+        
         return new ViewModel(array(
             'tag'      => $tag,
             'thread'   => $thread,
-            'messages' => $messages
+            'messages' => $messages,
+            'form'     => $form
         ));
     }
 
@@ -114,6 +118,33 @@ class DiscussController extends AbstractActionController
             'thread' => $thread
         ));
           
+    }
+    
+    public function newthreadAction()
+    {
+    	// Create new form instance.
+        $form = $this->getServiceLocator()->get('edpdiscuss_form');
+    	
+        $tag = $this->getTag();
+        
+        // Check if the request is a POST.
+        $request = $this->getRequest();
+        if ($request->isPost())
+        {
+    	    // if post, check if valid
+            $data = (array) $request->getPost();
+            if (false != $this->getDiscussService()->createThread($data, $tag))
+            {    
+                // Redirect somewhere?
+            }
+        }
+        
+        // If not a POST request, then just render the form.
+        return new ViewModel(array(
+            'form'   => $form,
+            'tag'    => $tag
+        ));
+        
     }
     
     public function verifyTag()
