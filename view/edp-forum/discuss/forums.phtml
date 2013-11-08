@@ -26,13 +26,13 @@
             <br><?php echo $tag->getDescription(); ?>
         </td>
         <td>
-            <span>:todo placeholder</span>
+            <span><?php echo $tag->getThreadCount(); ?></span>
         </td>
         <td>
-            <span>:todo placeholder</span>
+            <span><?php echo $tag->getMessageCount(); ?></span>
         </td>
         <td>
-            <span>:todo placeholder</span>
+            <span><?php echo $tag->getLastPost(); ?></span>
         </td>
     </tr>
     <?php endforeach; ?>
