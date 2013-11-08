@@ -86,8 +86,9 @@ class DiscussController extends AbstractActionController
 
     public function newmessageAction()
     {
-        // Create new form instance.
+        // Create new form and hydrator instances.
         $form = $this->getServiceLocator()->get('edpdiscuss_form');
+        $formHydrator = $this->getServiceLocator()->get('edpdiscuss_post_form_hydrator');
         
         $tag = $this->getTag();
         $thread = $this->getThread();
@@ -96,19 +97,30 @@ class DiscussController extends AbstractActionController
         $request = $this->getRequest();
         if ($request->isPost())
         {
-          // if post, check if valid
-          $data = (array) $request->getPost();
-          if (false != $this->getDiscussService()->createMessage($data, $thread))
-          {    
-              // Redirect to list of messages
-		      return $this->redirect()->toRoute('edpforum/thread', array(
-		          'tagslug'    => $tag->getSlug(),
-                  'tagid'      => $tag->getTagId(),
-                  'threadslug' => $thread->getSlug(),
-                  'threadid'   => $thread->getThreadId(),
-		          'action'     => 'messages'
-		      ));
-          }
+            // POST, so check if valid.
+            $data = (array) $request->getPost();
+          
+            // create a new message and sets its thread.
+            $message = $this->getServiceLocator()->get('edpdiscuss_message');
+            $message->setThread($thread);
+        
+            $form->setHydrator($formHydrator);
+            $form->bind($message);
+            $form->setData($data);
+            if ($form->isValid())
+            {
+          	    // Persist message.
+            	$this->getDiscussService()->createMessage($message);
+                
+            	// Redirect to list of messages
+		        return $this->redirect()->toRoute('edpforum/thread', array(
+		            'tagslug'    => $tag->getSlug(),
+                    'tagid'      => $tag->getTagId(),
+                    'threadslug' => $thread->getSlug(),
+                    'threadid'   => $thread->getThreadId(),
+		            'action'     => 'messages'
+		        ));
+            }
         } 
         
         // If not a POST request, then just render the form.
