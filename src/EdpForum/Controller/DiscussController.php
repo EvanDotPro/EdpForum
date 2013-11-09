@@ -43,10 +43,12 @@ class DiscussController extends AbstractActionController
         }
 
         $threads = $this->getDiscussService()->getLatestThreads(25, 0, $tag->getTagId());
-
+        $form = $this->getServiceLocator()->get('edpdiscuss_form');
+        
         return new ViewModel(array(
             'tag'     => $tag,
-            'threads' => $threads
+            'threads' => $threads,
+            'form'    => $form
         ));
     }
 
@@ -136,7 +138,8 @@ class DiscussController extends AbstractActionController
     {
     	// Create new form instance.
         $form = $this->getServiceLocator()->get('edpdiscuss_form');
-    	
+        $formHydrator = $this->getServiceLocator()->get('edpdiscuss_post_form_hydrator');
+        
         $tag = $this->getTag();
         
         // Check if the request is a POST.
@@ -145,10 +148,34 @@ class DiscussController extends AbstractActionController
         {
     	    // if post, check if valid
             $data = (array) $request->getPost();
-            if (false != $this->getDiscussService()->createThread($data, $tag))
-            {    
-                // Redirect somewhere?
-            }
+            
+            // create a new thread and sets its tag.
+            $thread = $this->getServiceLocator()->get('edpdiscuss_thread');
+            
+            // Create a new message and set its thread.
+            $message = $this->getServiceLocator()->get('edpdiscuss_message');
+            $message->setThread($thread);
+            
+            $form->setHydrator($formHydrator);
+            $form->bind($message);
+            $form->setData($data);
+            if ($form->isValid())
+            {
+                // Persist message and thread.
+                $thread = $this->getDiscussService()->createThread($thread, $message);
+                
+                // Associate thread with tag.
+                $this->getDiscussService()->AssociateTagAndThread($tag, $thread);
+                
+                // Redirect to list of messages
+                return $this->redirect()->toRoute('edpforum/thread', array(
+                    'tagslug'    => $tag->getSlug(),
+                    'tagid'      => $tag->getTagId(),
+                    'threadslug' => $thread->getSlug(),
+                    'threadid'   => $thread->getThreadId(),
+                    'action'     => 'messages'
+                ));
+            } 
         }
         
         // If not a POST request, then just render the form.

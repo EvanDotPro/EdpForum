@@ -41,3 +41,21 @@
     </tbody>
     
 </table>
+
+<div class="panel panel-primary">
+    <div class="panel-heading clearfix">
+        <h4 class="pull-left">New Thread</h4>
+    </div>
+    <div class="panel-body">
+        <?php
+            $form = $this->form;
+            $form->prepare();
+	        $form->setAttribute('action', $this->url('edpforum/newthread', array(
+	            'tagslug'    => $this->tag->getSlug(),
+	            'tagid'      => $this->tag->getTagId(),
+	        )));
+	        $form->setAttribute('method', 'post');
+	        echo $this->renderForm($form);	
+        ?>
+    </div>
+</div>
