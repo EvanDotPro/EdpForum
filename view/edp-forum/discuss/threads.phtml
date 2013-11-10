@@ -31,10 +31,10 @@
             <span>:todo placeholder</span>
         </td>
         <td>
-            <span>:todo placeholder</span>
+            <span><?php echo $thread->getMessageCount(); ?></span>
         </td>
         <td>
-            <span>:todo placeholder</span>
+            <span><?php echo $thread->getLastPost(); ?></span>
         </td>
     </tr>
     <?php endforeach; ?>

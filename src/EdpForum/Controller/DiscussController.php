@@ -73,11 +73,16 @@ class DiscussController extends AbstractActionController
             ));
         }
 
+        // Store visit if unique.
+        $this->getServiceLocator()->storeVisitIfUnique($thread);
+          
+        // Get messages.
         $messages = $this->getDiscussService()->getMessagesByThread($thread);
 
         // Create new form instance.
         $form = $this->getServiceLocator()->get('edpdiscuss_form');
         
+        // Return a view model.
         return new ViewModel(array(
             'tag'      => $tag,
             'thread'   => $thread,
