@@ -74,7 +74,9 @@ class DiscussController extends AbstractActionController
         }
 
         // Store visit if unique.
-        $this->getServiceLocator()->storeVisitIfUnique($thread);
+        $visit = $this->getServiceLocator()->get('edpdiscuss_visit');
+        $visit->setThread($thread);
+        $this->getDiscussService()->storeVisitIfUnique($visit);
           
         // Get messages.
         $messages = $this->getDiscussService()->getMessagesByThread($thread);
