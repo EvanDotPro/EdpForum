@@ -34,7 +34,7 @@
             <span><?php echo $thread->getMessageCount(); ?></span>
         </td>
         <td>
-            <span><?php echo $thread->getLastPost(); ?></span>
+            <small><?php echo date_format($thread->getLastPost(), 'H:i D d M Y'); ?></small>
         </td>
     </tr>
     <?php endforeach; ?>

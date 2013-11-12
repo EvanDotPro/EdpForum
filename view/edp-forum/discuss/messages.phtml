@@ -13,11 +13,7 @@
 <div class="panel panel-default">
     <div class="panel-heading clearfix">
         <h4 class="pull-left"><?php echo $message->getSubject(); ?></h4>
-        <small class="text-muted pull-right"><?php echo $this->dateFormat(
-            $message->getPostTime(),
-            IntlDateFormatter::MEDIUM, // date
-            IntlDateFormatter::MEDIUM  // time
-        ); ?></small>
+        <small class="text-muted pull-right"><?php echo date_format($message->getPostTime(), 'H:i D d M Y'); ?></small>
     </div>
     <div class="panel-body">
         <p><?php echo $message->getMessage(); ?></p>

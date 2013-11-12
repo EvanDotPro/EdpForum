@@ -32,7 +32,7 @@
             <span><?php echo $tag->getMessageCount(); ?></span>
         </td>
         <td>
-            <span><?php echo $tag->getLastPost(); ?></span>
+            <small><?php echo date_format($tag->getLastPost(), 'H:i D d M Y'); ?></small>
         </td>
     </tr>
     <?php endforeach; ?>
