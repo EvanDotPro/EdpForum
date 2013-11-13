@@ -14,6 +14,16 @@ class DiscussController extends AbstractActionController
 
     protected $thread;
 
+    public function forumsAction()
+    {
+        $tags = $this->getDiscussService()->getTags();
+
+        return new ViewModel(array(
+            'tags' => $tags
+        ));
+        
+    }
+    
     public function threadsAction()
     {
         $verifyTag = $this->verifyTag();
@@ -33,10 +43,12 @@ class DiscussController extends AbstractActionController
         }
 
         $threads = $this->getDiscussService()->getLatestThreads(25, 0, $tag->getTagId());
-
+        $form = $this->getServiceLocator()->get('edpdiscuss_form');
+        
         return new ViewModel(array(
             'tag'     => $tag,
-            'threads' => $threads
+            'threads' => $threads,
+            'form'    => $form
         ));
     }
 
@@ -61,15 +73,126 @@ class DiscussController extends AbstractActionController
             ));
         }
 
+        // Store visit if unique.
+        $visit = $this->getServiceLocator()->get('edpdiscuss_visit');
+        $visit->setThread($thread);
+        $this->getDiscussService()->storeVisitIfUnique($visit);
+          
+        // Get messages.
         $messages = $this->getDiscussService()->getMessagesByThread($thread);
 
+        // Create new form instance.
+        $form = $this->getServiceLocator()->get('edpdiscuss_form');
+        
+        // Return a view model.
         return new ViewModel(array(
             'tag'      => $tag,
             'thread'   => $thread,
-            'messages' => $messages
+            'messages' => $messages,
+            'form'     => $form
         ));
     }
 
+    public function newmessageAction()
+    {
+        // Create new form and hydrator instances.
+        $form = $this->getServiceLocator()->get('edpdiscuss_form');
+        $formHydrator = $this->getServiceLocator()->get('edpdiscuss_post_form_hydrator');
+        
+        $tag = $this->getTag();
+        $thread = $this->getThread();
+        
+        // Check if the request is a POST.
+        $request = $this->getRequest();
+        if ($request->isPost())
+        {
+            // POST, so check if valid.
+            $data = (array) $request->getPost();
+          
+            // create a new message and sets its thread.
+            $message = $this->getServiceLocator()->get('edpdiscuss_message');
+            $message->setThread($thread);
+        
+            $form->setHydrator($formHydrator);
+            $form->bind($message);
+            $form->setData($data);
+            if ($form->isValid())
+            {
+          	    // Persist message.
+            	$this->getDiscussService()->createMessage($message);
+                
+            	// Redirect to list of messages
+		        return $this->redirect()->toRoute('edpforum/thread', array(
+		            'tagslug'    => $tag->getSlug(),
+                    'tagid'      => $tag->getTagId(),
+                    'threadslug' => $thread->getSlug(),
+                    'threadid'   => $thread->getThreadId(),
+		            'action'     => 'messages'
+		        ));
+            }
+        } 
+        
+        // If not a POST request, then just render the form.
+        return new ViewModel(array(
+            'form'   => $form,
+            'tag'    => $tag,
+            'thread' => $thread
+        ));
+          
+    }
+    
+    public function newthreadAction()
+    {
+    	// Create new form instance.
+        $form = $this->getServiceLocator()->get('edpdiscuss_form');
+        $formHydrator = $this->getServiceLocator()->get('edpdiscuss_post_form_hydrator');
+        
+        $tag = $this->getTag();
+        
+        // Check if the request is a POST.
+        $request = $this->getRequest();
+        if ($request->isPost())
+        {
+    	    // if post, check if valid
+            $data = (array) $request->getPost();
+            
+            // create a new thread and sets its tag.
+            $thread = $this->getServiceLocator()->get('edpdiscuss_thread');
+            
+            // Create a new message and set its thread.
+            $message = $this->getServiceLocator()->get('edpdiscuss_message');
+            $message->setThread($thread);
+            
+            $form->setHydrator($formHydrator);
+            $form->bind($message);
+            $form->setData($data);
+            if ($form->isValid())
+            {
+                // Persist message and thread.
+                $thread = $this->getDiscussService()->createThread($thread, $message);
+                
+                // Associate thread with tag.
+                $this->getDiscussService()->AssociateTagAndThread($tag, $thread);
+                
+                // Redirect to list of messages
+                return $this->redirect()->toRoute('edpforum/thread', array(
+                    'tagslug'    => $tag->getSlug(),
+                    'tagid'      => $tag->getTagId(),
+                    'threadslug' => $thread->getSlug(),
+                    'threadid'   => $thread->getThreadId(),
+                    'action'     => 'messages'
+                ));
+            } 
+        }
+        
+        // If not a POST request, then just render the form.
+        return new ViewModel(array(
+            'form'   => $form,
+            'tag'    => $tag
+        ));
+        
+    }
+    
     public function verifyTag()
     {
         $tag = $this->getTag();

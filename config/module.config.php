@@ -8,6 +8,16 @@ return array(
     ),
     'router' => array(
         'routes' => array(
+            'forum' => array(
+                'type' => 'Zend\Mvc\Router\Http\Segment',
+                'options' => array(
+                    'route' => '/forum',
+                    'defaults' => array(
+                        'controller' => 'EdpForum\Controller\DiscussController',
+                        'action' => 'forums',
+                    ),
+                ),
+            ),
             'edpforum' => array(
                 'type'    => 'Zend\Mvc\Router\Http\Segment',
                 'options' => array(
@@ -26,7 +36,7 @@ return array(
                     'thread' => array(
                         'type'    => 'Zend\Mvc\Router\Http\Segment',
                         'options' => array(
-                            'route'    => '/:threadslug{-}-:threadid',
+                            'route'    => '/:threadslug{-}-:threadid/:action',
                             'constraints' => array(
                                 'threadslug' => '[a-zA-Z][a-zA-Z0-9_-]*',
                                 'threadid'   => '[0-9]+',
@@ -34,6 +44,17 @@ return array(
                             'defaults' => array(
                                 'controller' => 'EdpForum\Controller\DiscussController',
                                 'action'     => 'messages',
+                            ),
+                        ),
+                        'may_terminate' => true,
+                    ),
+                    'newthread' => array(
+                        'type'    => 'Zend\Mvc\Router\Http\Segment',
+                        'options' => array(
+                            'route'    => '/newthread',
+                            'defaults' => array(
+                                'controller' => 'EdpForum\Controller\DiscussController',
+                                'action'     => 'newthread',
                             ),
                         ),
                         'may_terminate' => true,
